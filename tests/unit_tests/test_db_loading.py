@@ -1,7 +1,9 @@
+from tests.conftest import client
+
 from server import loadClubs, loadCompetitions
 
 
-def test_loadClubs():
+def test_loadClubs_should_return_clubs():
     clubs = loadClubs()
     assert clubs[0:3] == [
         {
@@ -21,7 +23,7 @@ def test_loadClubs():
     ]
 
 
-def test_loadCompetitions():
+def test_loadCompetitions_should_return_competitions():
     competitions = loadCompetitions()
     assert competitions[0:2] == [
         {
