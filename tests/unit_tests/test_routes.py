@@ -4,12 +4,12 @@ import server
 from server import create_app
 
 
-def test_index_should_return_status_code_ok_and_normal_content(client):
+def test_index_should_return_status_code_ok(client):
     response = client.get('/')
     assert response.status_code == 200
-    assert b"Welcome to the GUDLFT Registration Portal!" in response.data
-    assert b"Please enter your secretary email to continue:" in response.data
-    assert b"Email:" in response.data
+    # assert b"Welcome to the GUDLFT Registration Portal!" in response.data
+    # assert b"Please enter your secretary email to continue:" in response.data
+    # assert b"Email:" in response.data
 
 
 def test_index_should_return_normal_content(client):
