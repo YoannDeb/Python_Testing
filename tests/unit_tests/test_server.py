@@ -1,4 +1,4 @@
-from server import loadClubs
+from server import loadClubs, loadCompetitions
 
 
 class TestDbLoading:
@@ -19,4 +19,19 @@ class TestDbLoading:
              "email": "kate@shelifts.co.uk",
              "points": "12"
              }
+        ]
+
+    def test_loadCompetitions(self):
+        competitions = loadCompetitions()
+        assert competitions[0:2] == [
+            {
+                "name": "Spring Festival",
+                "date": "2020-03-27 10:00:00",
+                "numberOfPlaces": "25"
+            },
+            {
+                "name": "Fall Classic",
+                "date": "2020-10-22 13:30:00",
+                "numberOfPlaces": "13"
+            }
         ]
