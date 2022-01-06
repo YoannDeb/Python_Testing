@@ -7,12 +7,9 @@ from server import create_app
 def test_index_should_return_status_code_ok(client):
     response = client.get('/')
     assert response.status_code == 200
-    # assert b"Welcome to the GUDLFT Registration Portal!" in response.data
-    # assert b"Please enter your secretary email to continue:" in response.data
-    # assert b"Email:" in response.data
 
 
-def test_index_should_return_normal_content(client):
+def test_index_should_return_expected_content(client):
     response = client.get('/')
     data = response.data.decode()
     assert "Welcome to the GUDLFT Registration Portal!" in data
@@ -57,9 +54,46 @@ class TestShowSummary:
         }
     ]
 
-    def test_showSummary_should_return_status_code_ok(self, client, mocker):
+    def test_showSummary_should_return_status_code_ok_with_secretary_email(self, client):
         # mocker.patch(server.loadClubs(), return_value=self.clubs)
         # mocker.patch(server.loadCompetitions(), return_value=self.competitions)
-        # clubs = self.clubs
-        response = client.get('/')
+        # mocker.patch.object(server.create_app, 'clubs', self.clubs)
+        clubs = self.clubs
+        competitions = self.competitions
+        response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
         assert response.status_code == 200
+
+    def test_showSummary_should_return_expected_content_with_secretary_email(self, client):
+        clubs = self.clubs
+        competitions = self.competitions
+        response = client.post('/showSummary', data={'email': 'admin@irontemple.com'})
+        data = response.data.decode()
+        assert "Welcome, admin@irontemple.com" in data
+        assert "Points available:" in data
+        assert "Competitions:" in data
+        assert "Spring Festival" in data
+        assert "Date: 2020-03-27 10:00:00" in data
+        assert "Number of Places:" in data
+
+    def test_showSummary_should_return_status_code_ok_with_unknown_email(self, client):
+        clubs = self.clubs
+        competitions = self.competitions
+        response = client.post('/showSummary', data={'email': 'test@test.com'})
+        assert response.status_code == 200
+
+    def test_showSummary_should_return_expected_content_with_unknown_email(self, client):
+        clubs = self.clubs
+        competitions = self.competitions
+        response = client.post('/showSummary', data={'email': 'test@test.com'})
+        data = response.data.decode()
+        assert "Welcome, test@test.com" in data
+        assert "Points available:" in data
+        assert "Competitions:" in data
+        assert "Spring Festival" in data
+        assert "Date: 2020-03-27 10:00:00" in data
+        assert "Number of Places:" in data
+
+    def test_showSummary_should_return_error_405_on_get_method(self, client):
+        response = client.get('/showSummary')
+        assert response.status_code == 405
+
