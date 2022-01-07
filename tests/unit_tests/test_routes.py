@@ -1,7 +1,8 @@
 from tests.conftest import client
 
 import server
-from server import create_app
+from server import create_app, loadCompetitions, loadClubs
+
 
 
 def test_index_should_return_status_code_ok(client):
@@ -55,17 +56,14 @@ class TestShowSummary:
     ]
 
     def test_showSummary_should_return_status_code_ok_with_secretary_email(self, client):
-        # mocker.patch(server.loadClubs(), return_value=self.clubs)
+        # mocker.patch(server.loadClubs, return_value=self.clubs)
         # mocker.patch(server.loadCompetitions(), return_value=self.competitions)
         # mocker.patch.object(server.create_app, 'clubs', self.clubs)
-        clubs = self.clubs
-        competitions = self.competitions
+        # mocker.patch('loadClubs', return_value=self.clubs)
         response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
         assert response.status_code == 200
 
     def test_showSummary_should_return_expected_content_with_secretary_email(self, client):
-        clubs = self.clubs
-        competitions = self.competitions
         response = client.post('/showSummary', data={'email': 'admin@irontemple.com'})
         data = response.data.decode()
         assert "Welcome, admin@irontemple.com" in data
