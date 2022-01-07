@@ -2,25 +2,25 @@ from tests.conftest import client
 
 import server
 from server import create_app, loadCompetitions, loadClubs
+from tests.utils import mock_loadClubs_not_empty
 
 
+class TestIndex:
 
-def test_index_should_return_status_code_ok(client):
-    response = client.get('/')
-    assert response.status_code == 200
+    def test_index_should_return_status_code_ok(client):
+        response = client.get('/')
+        assert response.status_code == 200
 
+    def test_index_should_return_expected_content(client):
+        response = client.get('/')
+        data = response.data.decode()
+        assert "Welcome to the GUDLFT Registration Portal!" in data
+        assert "Please enter your secretary email to continue:" in data
+        assert "Email:" in data
 
-def test_index_should_return_expected_content(client):
-    response = client.get('/')
-    data = response.data.decode()
-    assert "Welcome to the GUDLFT Registration Portal!" in data
-    assert "Please enter your secretary email to continue:" in data
-    assert "Email:" in data
-
-
-def test_index_should_return_status_code_405_on_post_request(client):
-    response = client.post('/')
-    assert response.status_code == 405
+    def test_index_should_return_status_code_405_on_post_request(client):
+        response = client.post('/')
+        assert response.status_code == 405
 
 
 class TestShowSummary:
@@ -55,11 +55,12 @@ class TestShowSummary:
         }
     ]
 
-    def test_showSummary_should_return_status_code_ok_with_secretary_email(self, client):
+    def test_showSummary_should_return_status_code_ok_with_secretary_email(self, client, mocker):
         # mocker.patch(server.loadClubs, return_value=self.clubs)
         # mocker.patch(server.loadCompetitions(), return_value=self.competitions)
         # mocker.patch.object(server.create_app, 'clubs', self.clubs)
         # mocker.patch('loadClubs', return_value=self.clubs)
+        # mocker.patch('server.loadClubs', return_value=self.clubs)
         response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
         assert response.status_code == 200
 
@@ -74,14 +75,10 @@ class TestShowSummary:
         assert "Number of Places:" in data
 
     def test_showSummary_should_return_status_code_ok_with_unknown_email(self, client):
-        clubs = self.clubs
-        competitions = self.competitions
         response = client.post('/showSummary', data={'email': 'test@test.com'})
         assert response.status_code == 200
 
     def test_showSummary_should_return_expected_content_with_unknown_email(self, client):
-        clubs = self.clubs
-        competitions = self.competitions
         response = client.post('/showSummary', data={'email': 'test@test.com'})
         data = response.data.decode()
         assert "Welcome, test@test.com" in data
@@ -94,4 +91,60 @@ class TestShowSummary:
     def test_showSummary_should_return_error_405_on_get_method(self, client):
         response = client.get('/showSummary')
         assert response.status_code == 405
+
+    # TODO: find how to mock loading of files and test with empty clubs list, empty competition list etc
+
+
+class TestBook:
+
+    def test_book_should_return_status_code_ok(self, client):
+        response = client.get('/book/Spring Festival/Simply Lift')
+        assert response.status_code == 200
+
+    def test_book_should_return_expected_content(self, client):
+        response = client.get('/book/Spring Festival/Simply Lift')
+        data = response.data.decode()
+        assert "Spring Festival" in data
+        assert "Places available: 25" in data
+        assert "How many places?" in data
+
+    def test_book_should_return_status_code_405_on_post_method(self, client):
+        response = client.post('/book/Spring Festival/Simply Lift')
+        assert response.status_code == 405
+
+    def test_book_should_return_error_message_and_not_allow_form_posting_if_places_not_filled(self, client):
+        pass
+
+
+class TestPurchasePlaces:
+
+    def test_purchasePlaces_should_return_status_code_ok(self, client):
+        response = client.post('/purchasePlaces', data={'places': '3', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        assert response.status_code == 200
+
+    def test_purchasePlaces_should_return_correct_informations_after_booking_3_places(self, client):
+        response = client.post('/purchasePlaces', data={'places': '3', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "Welcome, john@simplylift.co" in data
+        assert "Great-booking complete!" in data
+        assert "Points available: 10" in data
+        assert "Number of Places: 22" in data
+
+    def test_purchasePlaces_should_return_correct_informations_after_booking_0_places(self, client):
+        response = client.post('/purchasePlaces', data={'places': '0', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "Welcome, john@simplylift.co" in data
+        assert "Great-booking complete!" in data
+        assert "Points available: 13" in data
+        assert "Number of Places: 25" in data
+
+    def test_purchasePlaces_should_return_status_code_405_on_get_method(self, client):
+        response = client.get('/purchasePlaces')
+        assert response.status_code == 405
+
+    def test_purchasePlaces_should_not_allow_negative_number_of_places(self, client):
+        response = client.post('/purchasePlaces', data={'places': '-2', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "You can't book a negative number of places" in data
+        assert "Great-booking complete!" not in data
 
