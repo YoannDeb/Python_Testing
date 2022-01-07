@@ -1,4 +1,5 @@
 from tests.conftest import client
+from urllib.parse import urlparse
 
 import server
 from server import create_app, loadCompetitions, loadClubs
@@ -7,18 +8,18 @@ from tests.utils import mock_loadClubs_not_empty
 
 class TestIndex:
 
-    def test_index_should_return_status_code_ok(client):
+    def test_index_should_return_status_code_ok(self, client):
         response = client.get('/')
         assert response.status_code == 200
 
-    def test_index_should_return_expected_content(client):
+    def test_index_should_return_expected_content(self, client):
         response = client.get('/')
         data = response.data.decode()
         assert "Welcome to the GUDLFT Registration Portal!" in data
         assert "Please enter your secretary email to continue:" in data
         assert "Email:" in data
 
-    def test_index_should_return_status_code_405_on_post_request(client):
+    def test_index_should_return_status_code_405_on_post_request(self, client):
         response = client.post('/')
         assert response.status_code == 405
 
@@ -61,6 +62,7 @@ class TestShowSummary:
         # mocker.patch.object(server.create_app, 'clubs', self.clubs)
         # mocker.patch('loadClubs', return_value=self.clubs)
         # mocker.patch('server.loadClubs', return_value=self.clubs)
+        print("clubs")
         response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
         assert response.status_code == 200
 
@@ -112,9 +114,6 @@ class TestBook:
         response = client.post('/book/Spring Festival/Simply Lift')
         assert response.status_code == 405
 
-    def test_book_should_return_error_message_and_not_allow_form_posting_if_places_not_filled(self, client):
-        pass
-
 
 class TestPurchasePlaces:
 
@@ -147,4 +146,19 @@ class TestPurchasePlaces:
         data = response.data.decode()
         assert "You can't book a negative number of places" in data
         assert "Great-booking complete!" not in data
+
+
+class TestLogout:
+
+    def test_logout_should_return_status_code_302_redirection(self, client):
+        response = client.get('/logout')
+        assert response.status_code == 302
+
+    def test_logout_should_redirect_to_index(self, client):
+        response = client.get('/logout')
+        assert urlparse(response.location).path == '/'
+
+    def test_logout_should_return_status_code_405_on_post_method(self, client):
+        response = client.post('/logout')
+        assert response.status_code == 405
 
