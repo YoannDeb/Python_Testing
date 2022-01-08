@@ -80,15 +80,20 @@ class TestShowSummary:
         response = client.post('/showSummary', data={'email': 'test@test.com'})
         assert response.status_code == 200
 
+    def test_showSummary_should_return_status_code_ok_with_empty_email(self, client):
+        response = client.post('/showSummary', data={'email': ''})
+        assert response.status_code == 200
+
     def test_showSummary_should_return_expected_content_with_unknown_email(self, client):
         response = client.post('/showSummary', data={'email': 'test@test.com'})
         data = response.data.decode()
-        assert "Welcome, test@test.com" in data
-        assert "Points available:" in data
-        assert "Competitions:" in data
-        assert "Spring Festival" in data
-        assert "Date: 2020-03-27 10:00:00" in data
-        assert "Number of Places:" in data
+        assert "Your email is not authorized to see the list of competitions." in data
+        assert "Please logout and enter an authorized email if you want to book a competition." in data
+        assert "Points available:" not in data
+        assert "Competitions:" not in data
+        assert "Spring Festival" not in data
+        assert "Date: 2020-03-27 10:00:00" not in data
+        assert "Number of Places:" not in data
 
     def test_showSummary_should_return_error_405_on_get_method(self, client):
         response = client.get('/showSummary')
@@ -146,6 +151,23 @@ class TestPurchasePlaces:
         data = response.data.decode()
         assert "You can't book a negative number of places" in data
         assert "Great-booking complete!" not in data
+
+class TestPointsDisplay:
+
+    def test_pointsDisplay_should_return_status_code_ok(self, client):
+        response = client.get('/pointsDisplay')
+        assert response.status_code == 200
+
+    def test_pointsDisplay_should_return_expected_content(self, client):
+        response = client.get('/pointsDisplay')
+        data = response.data.decode()
+        assert "Points Chart" in data
+        assert "Simply Lift" in data
+        # todo complete with more content when decided
+
+    def test_pointsDisplay_should_return_status_code_405_on_post_method(self, client):
+        response = client.post('/pointsDisplay')
+        assert response.status_code == 405
 
 
 class TestLogout:
