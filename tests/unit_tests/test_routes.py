@@ -152,6 +152,25 @@ class TestPurchasePlaces:
         assert "You can't book a negative number of places" in data
         assert "Great-booking complete!" not in data
 
+    def test_purchasePlaces_should_not_allow_more_than_12_places_booking(self, client):
+        response = client.post('/purchasePlaces', data={'places': '13', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "You can't book more than 12 places for one competition"
+        assert "Great-booking complete!" not in data
+
+    def test_purchasePlaces_should_not_allow_booking_for_pasts_competitions(self, client):
+        response = client.post('/purchasePlaces', data={'places': '2', 'club': 'Iron Temple', 'competition': 'Fall Classic'})
+        data = response.data.decode()
+        assert "You can't book places for a past competition"
+        assert "Great-booking complete!" not in data
+
+    def test_purchasePlaces_should_not_allow_booking_more_places_than_the_amount_of_points_the_club_has(self, client):
+        response = client.post('/purchasePlaces', data={'places': '5', 'club': 'Iron Temple', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "Club doesn't have enough points to book this amount of places"
+        assert "Great-booking complete!" not in data
+
+
 class TestPointsDisplay:
 
     def test_pointsDisplay_should_return_status_code_ok(self, client):
