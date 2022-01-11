@@ -1,5 +1,6 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
+from forms.forms import RegistrationForm
 
 
 def loadClubs():
@@ -22,12 +23,19 @@ clubs = loadClubs()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    form = RegistrationForm(request.form, label="Email")
+    return render_template('index.html', form=form)
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    form = RegistrationForm(request.form, label="Email")
+    if form.validate():
+        email = form.email.data
+        if email not in [club['email'] for club in clubs]:
+            return render_template('index.html', form=form, message="You are not secretary of a club. Please input a secretary email", style="color:red")
+        club = [club for club in clubs if club['email'] == email][0]
+        return render_template('welcome.html',club=club,competitions=competitions, form=form)
+    return redirect(url_for('index'))
 
 
 @app.route('/book/<competition>/<club>')
