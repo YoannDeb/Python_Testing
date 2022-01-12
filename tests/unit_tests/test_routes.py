@@ -126,13 +126,20 @@ class TestPurchasePlaces:
     #     data = response.data.decode()
     #     assert "You can't book a negative number of places" in data
     #     assert "Great-booking complete!" not in data
-    #
-    # def test_purchasePlaces_should_not_allow_more_than_12_places_booking(self, client, mock_normal_data_from_json):
-    #     response = client.post('/purchasePlaces', data={'places': '13', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
-    #     data = response.data.decode()
-    #     assert "You can't book more than 12 places for one competition"
-    #     assert "Great-booking complete!" not in data
-    #
+
+    def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_one_purchase(self, client, mock_normal_data_from_json):
+        response = client.post('/purchasePlaces', data={'places': '13', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "You can't book more than 12 places in a single competition."
+        assert "Great-booking complete!" not in data
+
+    def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_two_purchase(self, client, mock_normal_data_from_json):
+        response = client.post('/purchasePlaces', data={'places': '7', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '6', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "You can't book more than 12 places in a single competition."
+        assert "Great-booking complete!" not in data
+
     # def test_purchasePlaces_should_not_allow_booking_for_pasts_competitions(self, client, mock_normal_data_from_json):
     #     response = client.post('/purchasePlaces', data={'places': '2', 'club': 'Iron Temple', 'competition': 'Fall Classic'})
     #     data = response.data.decode()
