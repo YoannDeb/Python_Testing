@@ -57,8 +57,6 @@ def purchasePlaces():
         club[f"{competition['name']}_{competition['date']}_purchase_history"]
     except KeyError:
         club[f"{competition['name']}_{competition['date']}_purchase_history"] = 0
-    print(club)
-    print(club[f"{competition['name']}_{competition['date']}_purchase_history"])
 
     placesRequired = int(request.form['places'])
     available_club_points = int(club['points'])
@@ -68,9 +66,7 @@ def purchasePlaces():
         flash("You can't book more than 12 places in a single competition.")
     else:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-        print(club[f"{competition['name']}_{competition['date']}_purchase_history"])
         club[f"{competition['name']}_{competition['date']}_purchase_history"] += placesRequired
-        print(club[f"{competition['name']}_{competition['date']}_purchase_history"])
         flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
