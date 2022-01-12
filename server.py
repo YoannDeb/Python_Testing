@@ -53,12 +53,24 @@ def book(competition,club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
+    try:
+        club[f"{competition['name']}_{competition['date']}_purchase_history"]
+    except KeyError:
+        club[f"{competition['name']}_{competition['date']}_purchase_history"] = 0
+    print(club)
+    print(club[f"{competition['name']}_{competition['date']}_purchase_history"])
+
     placesRequired = int(request.form['places'])
     available_club_points = int(club['points'])
     if placesRequired > available_club_points:
         flash("Club doesn't have enough points to book this amount of places.")
+    elif placesRequired + club[f"{competition['name']}_{competition['date']}_purchase_history"] > 12:
+        flash("You can't book more than 12 places in a single competition.")
     else:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+        print(club[f"{competition['name']}_{competition['date']}_purchase_history"])
+        club[f"{competition['name']}_{competition['date']}_purchase_history"] += placesRequired
+        print(club[f"{competition['name']}_{competition['date']}_purchase_history"])
         flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
