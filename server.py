@@ -78,7 +78,9 @@ def purchasePlaces():
 
     placesRequired = int(request.form['places'])
     available_club_points = int(club['points'])
-    if placesRequired > available_club_points:
+    if placesRequired <= 0:
+        flash("The number of places must be greater than 0 to be valid.")
+    elif placesRequired > available_club_points:
         flash("Club doesn't have enough points to book this amount of places.")
     elif placesRequired + club[f"{competition['name']}_{competition['date']}_purchase_history"] > 12:
         flash("You can't book more than 12 places in a single competition.")
