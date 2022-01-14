@@ -70,11 +70,11 @@ def book(competition,club):
     if foundClub and foundCompetition:
         if competition_date < datetime.datetime.now():
             flash("You can't book a place for past competitions.")
-            return render_template('welcome.html', club=club, competitions=competitions)
+            return render_template('welcome.html', club=foundClub, competitions=competitions)
         return render_template('booking.html',club=foundClub,competition=foundCompetition)
     else:
         flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=foundClub, competitions=competitions)
 
 
 @app.route('/purchasePlaces',methods=['POST'])
