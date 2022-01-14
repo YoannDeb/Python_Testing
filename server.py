@@ -15,6 +15,24 @@ def loadCompetitions():
          return listOfCompetitions
 
 
+def register_club_points_in_clubs(modified_club):
+    list_position = 0
+    for club in clubs:
+        if club['name'] == modified_club['name']:
+            club_position = list_position
+            break
+    clubs[club_position] = modified_club
+
+
+def register_competition_in_competitions(modified_competition):
+    list_position = 0
+    for competition in competitions:
+        if competition['name'] == modified_competition['name']:
+            competition_position = list_position
+            break
+    competitions[competition_position] = modified_competition
+
+
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
@@ -23,12 +41,12 @@ clubs = loadClubs()
 
 @app.route('/')
 def index():
-    form = RegistrationForm(request.form, label="Email:")
+    form = RegistrationForm(request.form)
     return render_template('index.html', form=form)
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    form = RegistrationForm(request.form, label="Email:")
+    form = RegistrationForm(request.form)
     if form.validate():
         email = form.email.data
         if email not in [club['email'] for club in clubs]:
@@ -66,7 +84,10 @@ def purchasePlaces():
         flash("You can't book more than 12 places in a single competition.")
     else:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+        club['points'] = str(int(club['points']) - placesRequired)
         club[f"{competition['name']}_{competition['date']}_purchase_history"] += placesRequired
+        register_competition_in_competitions(competition)
+        register_club_points_in_clubs(club)
         flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
