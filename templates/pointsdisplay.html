@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>clubs' score chart | GUDLFT</title>
+</head>
+<body>
+    <h1>Welcome to the GUDLFT Score Chart!</h1>
+    </h2><a href="{{url_for('index')}}">Back to index</a>
+    <p style={{ style }}>{{ message }}</p>
+    <table style="border-collapse: collapse">
+        <tr>
+            <td style="border: 1px solid black">Club</td>
+            <td style="border: 1px solid black">Available booking points</td>
+        </tr>
+    {% for club in clubs %}
+        <tr>
+            <td style="border: 1px solid black">{{ club['name'] }}</td>
+            <td style="border: 1px solid black">{{ club['points'] }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    </form>
+</body>
+</html>
