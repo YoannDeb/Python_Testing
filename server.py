@@ -1,6 +1,7 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 from forms.forms import RegistrationForm
+import datetime
 
 
 def loadClubs():
@@ -60,7 +61,16 @@ def showSummary():
 def book(competition,club):
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
+    competition_date = datetime.datetime(year=int(foundCompetition['date'][:4]),
+                                         month=int(foundCompetition['date'][5:7]),
+                                         day=int(foundCompetition['date'][8:10]),
+                                         hour=int(foundCompetition['date'][11:13]),
+                                         minute=int(foundCompetition['date'][14:16]),
+                                         second=int(foundCompetition['date'][17:18]))
     if foundClub and foundCompetition:
+        if competition_date < datetime.datetime.now():
+            flash("You can't book a place for past competitions.")
+            return render_template('welcome.html', club=club, competitions=competitions)
         return render_template('booking.html',club=foundClub,competition=foundCompetition)
     else:
         flash("Something went wrong-please try again")
@@ -85,7 +95,7 @@ def purchasePlaces():
     elif placesRequired + club[f"{competition['name']}_{competition['date']}_purchase_history"] > 12:
         flash("You can't book more than 12 places in a single competition.")
     else:
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+        competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
         club['points'] = str(int(club['points']) - placesRequired)
         club[f"{competition['name']}_{competition['date']}_purchase_history"] += placesRequired
         register_competition_in_competitions(competition)
