@@ -25,7 +25,6 @@ class TestShowSummary:
 
     def test_showSummary_should_return_status_code_ok_with_secretary_email(self, client, mock_normal_data_from_json):
         response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
-
         assert response.status_code == 200
 
     def test_showSummary_should_return_expected_content_with_secretary_email(self, client, mock_normal_data_from_json):
@@ -35,7 +34,7 @@ class TestShowSummary:
         assert "Points available:" in data
         assert "Competitions:" in data
         assert "Spring Festival" in data
-        assert "Date: 2020-03-27 10:00:00" in data
+        assert "Date: 2029-03-27 10:00:00" in data
         assert "Number of Places:" in data
 
     def test_showSummary_should_return_status_code_ok_with_unknown_email(self, client, mock_normal_data_from_json):
@@ -93,6 +92,12 @@ class TestBook:
         response = client.post('/book/Spring Festival/Simply Lift')
         assert response.status_code == 405
 
+    def test_book_should_not_allow_booking_for_past_competitions(self, client, mock_normal_data_from_json):
+        response = client.post('/book/Past competition/Simply Lift')
+        data = response.data.decode()
+        assert "You can't book a place for past competitions."
+        assert "Great-booking complete!" not in data
+
 
 class TestPurchasePlaces:
 
@@ -142,11 +147,6 @@ class TestPurchasePlaces:
         assert "You can't book more than 12 places in a single competition."
         assert "Great-booking complete!" not in data
 
-    # def test_purchasePlaces_should_not_allow_booking_for_pasts_competitions(self, client, mock_normal_data_from_json):
-    #     response = client.post('/purchasePlaces', data={'places': '2', 'club': 'Iron Temple', 'competition': 'Fall Classic'})
-    #     data = response.data.decode()
-    #     assert "You can't book places for a past competition"
-    #     assert "Great-booking complete!" not in data
 
     def test_purchasePlaces_should_not_allow_booking_more_places_than_the_amount_of_points_the_club_has(self, client, mock_normal_data_from_json):
         response = client.post('/purchasePlaces', data={'places': '5', 'club': 'Iron Temple', 'competition': 'Spring Festival'})
