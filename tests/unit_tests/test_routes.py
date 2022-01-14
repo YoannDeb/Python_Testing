@@ -155,22 +155,23 @@ class TestPurchasePlaces:
         assert "Great-booking complete!" not in data
 
 
-# class TestPointsDisplay:
-#
-#     def test_pointsDisplay_should_return_status_code_ok(self, client, mock_normal_data_from_json):
-#         response = client.get('/pointsDisplay')
-#         assert response.status_code == 200
-#
-#     def test_pointsDisplay_should_return_expected_content(self, client, mock_normal_data_from_json):
-#         response = client.get('/pointsDisplay')
-#         data = response.data.decode()
-#         assert "Points Chart" in data
-#         assert "Simply Lift" in data
-#         # todo complete with more content when decided
-#
-#     def test_pointsDisplay_should_return_status_code_405_on_post_method(self, client, mock_normal_data_from_json):
-#         response = client.post('/pointsDisplay')
-#         assert response.status_code == 405
+class TestPointsDisplay:
+
+    def test_pointsDisplay_should_return_status_code_ok(self, client, mock_normal_data_from_json):
+        response = client.get('/pointsDisplay')
+        assert response.status_code == 200
+
+    def test_pointsDisplay_should_return_expected_content(self, client, mock_normal_data_from_json):
+        response = client.get('/pointsDisplay')
+        data = response.data.decode()
+        assert "Welcome to the GUDLFT Score Chart!" in data
+        assert "Simply Lift" in data
+        assert "Available booking points" in data
+        assert "13" in data
+
+    def test_pointsDisplay_should_return_status_code_405_on_post_method(self, client, mock_normal_data_from_json):
+        response = client.post('/pointsDisplay')
+        assert response.status_code == 405
 
 
 class TestLogout:
