@@ -76,22 +76,22 @@ class TestShowSummary:
         assert response.status_code == 200
 
 
-# class TestBook:
-#
-#     def test_book_should_return_status_code_ok(self, client, mock_normal_data_from_json):
-#         response = client.get('/book/Spring Festival/Simply Lift')
-#         assert response.status_code == 200
-#
-#     def test_book_should_return_expected_content(self, client, mock_normal_data_from_json):
-#         response = client.get('/book/Spring Festival/Simply Lift')
-#         data = response.data.decode()
-#         assert "Spring Festival" in data
-#         assert "Places available: 25" in data
-#         assert "How many places?" in data
-#
-#     def test_book_should_return_status_code_405_on_post_method(self, client, mock_normal_data_from_json):
-#         response = client.post('/book/Spring Festival/Simply Lift')
-#         assert response.status_code == 405
+class TestBook:
+
+    def test_book_should_return_status_code_ok(self, client, mock_normal_data_from_json):
+        response = client.get('/book/Spring Festival/Simply Lift')
+        assert response.status_code == 200
+
+    def test_book_should_return_expected_content(self, client, mock_normal_data_from_json):
+        response = client.get('/book/Spring Festival/Simply Lift')
+        data = response.data.decode()
+        assert "Spring Festival" in data
+        assert "Places available: 25" in data
+        assert "How many places?" in data
+
+    def test_book_should_return_status_code_405_on_post_method(self, client, mock_normal_data_from_json):
+        response = client.post('/book/Spring Festival/Simply Lift')
+        assert response.status_code == 405
 
 
 class TestPurchasePlaces:
@@ -113,7 +113,7 @@ class TestPurchasePlaces:
         response = client.post('/purchasePlaces', data={'places': '0', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "Welcome, john@simplylift.co" in data
-        assert "Great-booking complete!" in data
+        assert "The number of places must be greater than 0 to be valid." in data
         assert "Points available: 13" in data
         assert "Number of Places: 25" in data
 
@@ -121,11 +121,13 @@ class TestPurchasePlaces:
         response = client.get('/purchasePlaces')
         assert response.status_code == 405
 
-    # def test_purchasePlaces_should_not_allow_negative_number_of_places(self, client, mock_normal_data_from_json):
-    #     response = client.post('/purchasePlaces', data={'places': '-2', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
-    #     data = response.data.decode()
-    #     assert "You can't book a negative number of places" in data
-    #     assert "Great-booking complete!" not in data
+    def test_purchasePlaces_should_not_allow_negative_number_of_places(self, client, mock_normal_data_from_json):
+        response = client.post('/purchasePlaces', data={'places': '0', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        data = response.data.decode()
+        assert "Welcome, john@simplylift.co" in data
+        assert "The number of places must be greater than 0 to be valid." in data
+        assert "Points available: 13" in data
+        assert "Number of Places: 25" in data
 
     def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_one_purchase(self, client, mock_normal_data_from_json):
         response = client.post('/purchasePlaces', data={'places': '13', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
