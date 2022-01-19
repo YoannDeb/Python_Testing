@@ -111,7 +111,7 @@ class TestPurchasePlaces:
         data = response.data.decode()
         assert "Welcome, john@simplylift.co" in data
         assert "Great-booking complete!" in data
-        assert "Points available: 10" in data
+        assert "Points available: 4" in data
         assert "Number of Places: 22" in data
 
     def test_purchasePlaces_should_return_correct_informations_after_booking_0_places(self, client, mock_normal_data_from_json):
