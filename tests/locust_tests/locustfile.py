@@ -20,5 +20,4 @@ class GUDLFT(HttpUser):
 
     @task
     def purchasePlaces(self):
-        self.client.post("/purchasePlaces", data={'club': 'Simply Lift', 'competition': 'Spring Festival', 'places': '5'})
-
+        self.client.post("/purchasePlaces", data={'club': 'Simply Lift', 'competition': 'Spring Festival', 'places': '1'})
