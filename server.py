@@ -3,6 +3,7 @@ from flask import Flask,render_template,request,redirect,flash,url_for
 from forms.forms import RegistrationForm
 import datetime
 
+POINTS_PER_PLACE = 3
 
 def loadClubs():
     with open('clubs.json') as c:
@@ -90,13 +91,13 @@ def purchasePlaces():
     available_club_points = int(club['points'])
     if placesRequired <= 0:
         flash("The number of places must be greater than 0 to be valid.")
-    elif placesRequired > available_club_points:
+    elif placesRequired > (available_club_points/POINTS_PER_PLACE):
         flash("Club doesn't have enough points to book this amount of places.")
     elif placesRequired + club[f"{competition['name']}_{competition['date']}_purchase_history"] > 12:
         flash("You can't book more than 12 places in a single competition.")
     else:
         competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
-        club['points'] = str(int(club['points']) - placesRequired)
+        club['points'] = str(int(club['points']) - (placesRequired * POINTS_PER_PLACE))
         club[f"{competition['name']}_{competition['date']}_purchase_history"] += placesRequired
         register_competition_in_competitions(competition)
         register_club_points_in_clubs(club)
