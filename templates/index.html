@@ -6,10 +6,12 @@
 </head>
 <body>
     <h1>Welcome to the GUDLFT Registration Portal!</h1>
+    </h2><a href="{{url_for('PointsDisplay')}}">Points Chart</a>
+    <p style={{ style }}>{{ message }}</p>
     Please enter your secretary email to continue:
+    {% from "_formhelpers.html" import render_field %}
     <form action="showSummary" method="post">
-        <label for="email">Email:</label>
-        <input type="email" name="email" id=""/>
+        {{ render_field(form.email) }}
         <button type="submit">Enter</button>
     </form>
 </body>
