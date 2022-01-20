@@ -187,4 +187,3 @@ class TestLogout:
     def test_logout_should_return_status_code_405_on_post_method(self, client, mock_normal_data_from_json):
         response = client.post('/logout')
         assert response.status_code == 405
-
