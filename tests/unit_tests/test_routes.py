@@ -93,6 +93,30 @@ class TestBook:
         response = client.post('/book/Spring Festival/Simply Lift')
         assert response.status_code == 405
 
+    def test_book_should_not_allow_booking_for_past_competitions(self, client, mock_normal_data_from_json):
+        response = client.post('/book/Past competition/Simply Lift')
+        data = response.data.decode()
+        assert "You can't book a place for past competitions."
+        assert "Great-booking complete!" not in data
+
+    def test_book_should_return_error_message_when_competition_does_not_exist(self, client, mock_normal_data_from_json):
+        response = client.post('/book/UnknownCompetition/Simply Lift')
+        data = response.data.decode()
+        assert "Something went wrong-please try again"
+        assert "Great-booking complete!" not in data
+
+    def test_book_should_return_error_message_when_club_does_not_exist(self, client, mock_normal_data_from_json):
+        response = client.post('/book/Spring Festival/UnknownClub')
+        data = response.data.decode()
+        assert "Something went wrong-please try again"
+        assert "Great-booking complete!" not in data
+
+    def test_book_should_return_error_message_when_competiotn_and_club_does_not_exist(self, client, mock_normal_data_from_json):
+        response = client.post('/book/UnknownCompetition/UnknownClub')
+        data = response.data.decode()
+        assert "Something went wrong-please try again"
+        assert "Great-booking complete!" not in data
+
 
 class TestPurchasePlaces:
 
