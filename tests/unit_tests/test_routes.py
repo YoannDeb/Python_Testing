@@ -110,7 +110,7 @@ class TestBook:
         assert "Something went wrong-please try again"
         assert "Great-booking complete!" not in data
 
-    def test_book_should_return_error_message_when_competiotn_and_club_does_not_exist(self, client, mock_normal_data_from_json):
+    def test_book_should_return_error_message_when_competition_and_club_does_not_exist(self, client, mock_normal_data_from_json):
         response = client.post('/book/UnknownCompetition/UnknownClub')
         data = response.data.decode()
         assert "Something went wrong-please try again"
