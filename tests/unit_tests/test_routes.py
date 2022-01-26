@@ -165,7 +165,6 @@ class TestPurchasePlaces:
         assert "You can't book more than 12 places in a single competition."
         assert "Great-booking complete!" not in data
 
-
     def test_purchasePlaces_should_not_allow_booking_more_places_than_the_amount_of_points_the_club_has(self, client, mock_normal_data_from_json):
         response = client.post('/purchasePlaces', data={'places': '5', 'club': 'Iron Temple', 'competition': 'Spring Festival'})
         data = response.data.decode()
