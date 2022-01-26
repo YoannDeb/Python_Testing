@@ -89,5 +89,3 @@ def test_typical_navigation():
     logout_link.click()
     time.sleep(5)
     driver.quit()
-
-
