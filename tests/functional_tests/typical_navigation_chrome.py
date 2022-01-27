@@ -5,9 +5,14 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 from . import typical_navigation_utils
 
+PATH = "C:\\Program Files\\selenium_webdrivers\\chromedriver.exe"
+
 
 def setup_chrome_webdriver():
-    service = Service(executable_path=ChromeDriverManager().install())
+    try:
+        service = Service(executable_path=ChromeDriverManager().install())
+    except ValueError:
+        service = Service(executable_path=PATH)
     options = ChromeOptions()
     driver = webdriver.Chrome(service=service, options=options)
     return driver
