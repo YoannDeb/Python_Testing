@@ -1,5 +1,3 @@
-from tests.conftest import client
-
 from server import loadClubs, loadCompetitions
 
 
