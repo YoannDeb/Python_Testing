@@ -1,5 +1,5 @@
 import json
-from flask import Flask,render_template,request,redirect,flash,url_for
+from flask import Flask, render_template, request, redirect, flash, url_for
 from forms.forms import RegistrationForm
 import datetime
 
@@ -46,7 +46,7 @@ def index():
     form = RegistrationForm(request.form)
     return render_template('index.html', form=form)
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
     form = RegistrationForm(request.form)
     if form.validate():
@@ -54,7 +54,7 @@ def showSummary():
         if email not in [club['email'] for club in clubs]:
             return render_template('index.html', form=form, message="You are not secretary of a club. Please input a secretary email.", style="color:red")
         club = [club for club in clubs if club['email'] == email][0]
-        return render_template('welcome.html',club=club,competitions=competitions, form=form)
+        return render_template('welcome.html', club=club, competitions=competitions, form=form)
     return redirect(url_for('index'))
 
 
@@ -72,13 +72,13 @@ def book(competition,club):
         if competition_date < datetime.datetime.now():
             flash("You can't book a place for past competitions.")
             return render_template('welcome.html', club=foundClub, competitions=competitions)
-        return render_template('booking.html',club=foundClub,competition=foundCompetition)
+        return render_template('booking.html', club=foundClub, competition=foundCompetition)
     else:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
-@app.route('/purchasePlaces',methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
