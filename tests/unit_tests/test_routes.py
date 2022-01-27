@@ -41,22 +41,12 @@ class TestShowSummary:
         response = client.post('/showSummary', data={'email': 'test@test.com'})
         assert response.status_code == 200
 
-    # def test_showSummary_should_return_status_code_302_with_empty_email(self, client, mock_normal_data_from_json):
-    #     response = client.post('/showSummary', data={'email': ''})
-    #     assert response.status_code == 302
-
     def test_showSummary_should_return_expected_content_with_unknown_email(self, client, mock_normal_data_from_json):
         response = client.post('/showSummary', data={'email': 'test@test.com'})
         data = response.data.decode()
         assert "Welcome to the GUDLFT Registration Portal!" in data
         assert "Please enter your secretary email to continue:" in data
         assert "You are not secretary of a club. Please input a secretary email." in data
-
-    # def test_showSummary_should_return_expected_content_with_empty_email(self, client, mock_normal_data_from_json):
-    #     response = client.post('/showSummary', data={'email': ''})
-    #     data = response.data.decode()
-    #     assert "Welcome to the GUDLFT Registration Portal!" in data
-    #     assert "Please enter your secretary email to continue:" in data
 
     def test_showSummary_should_return_302_on_get_method(self, client, mock_normal_data_from_json):
         response = client.post('/showSummary')
@@ -121,7 +111,6 @@ class TestPurchasePlaces:
 
     def test_purchasePlaces_should_return_status_code_ok(self, client, mock_normal_data_from_json):
         response = client.post('/purchasePlaces', data={'places': '3', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
-        data = response.data.decode()
         assert response.status_code == 200
 
     def test_purchasePlaces_should_return_correct_informations_after_booking_3_places(self, client, mock_normal_data_from_json):
@@ -159,12 +148,11 @@ class TestPurchasePlaces:
         assert "Great-booking complete!" not in data
 
     def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_two_purchase(self, client, mock_normal_data_from_json):
-        response = client.post('/purchasePlaces', data={'places': '7', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        client.post('/purchasePlaces', data={'places': '7', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
         response = client.post('/purchasePlaces', data={'places': '6', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "You can't book more than 12 places in a single competition."
         assert "Great-booking complete!" not in data
-
 
     def test_purchasePlaces_should_not_allow_booking_more_places_than_the_amount_of_points_the_club_has(self, client, mock_normal_data_from_json):
         response = client.post('/purchasePlaces', data={'places': '5', 'club': 'Iron Temple', 'competition': 'Spring Festival'})

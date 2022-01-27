@@ -1,5 +1,3 @@
-from tests.conftest import client
-
 from server import loadClubs, loadCompetitions
 
 
@@ -28,7 +26,7 @@ def test_loadCompetitions_should_return_competitions():
     assert competitions[0:2] == [
         {
             "name": "Spring Festival",
-            "date": "2020-03-27 10:00:00",
+            "date": "2029-03-27 10:00:00",
             "numberOfPlaces": "25"
         },
         {
