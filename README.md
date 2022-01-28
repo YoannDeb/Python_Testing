@@ -31,7 +31,7 @@
 
     - Rather than hunting around for the packages you need, you can install in one step. Type <code>pip install -r requirements.txt</code>. This will install all the packages listed in the respective file. If you install a package, make sure others know by updating the requirements.txt file. An easy way to do this is <code>pip freeze > requirements.txt</code>
 
-    - Flask requires that you set an environmental variable to the python file. However you do that, you'll want to set the file to be <code>server.py</code>. Check [here](https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application) for more details
+    - Flask requires that you set an environmental variable to the python file. However you do that, you'll want to set the file to be <code>server.py</code>. Check [here](https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application) for more details (exemple for Windows PowerShell: <code>$env:FLASK_APP = "server.py"</code>)
 
     - You should now be ready to test the application. In the directory, type either <code>flask run</code> or <code>python -m flask run</code>. The app should respond with an address you should be able to go to using your browser.
 
@@ -48,4 +48,12 @@
 
     We also like to show how well we're testing, so there's a module called 
     [coverage](https://coverage.readthedocs.io/en/coverage-5.1/) you should add to your project.
-
+   
+   Test commands to launch from root of the project:
+   1. Unit tests with Pytest: <code>pytest -v -s</code>
+   2. Functional tests with pytest, selenium and Chrome: <code>pytest tests/functional_tests/typical_navigation_chrome.py -v -s</code>
+   3. Functional tests with pytest, selenium and Firefox: <code>pytest tests/functional_tests/typical_navigation_firefox.py -v -s</code>
+   4. Quick test cover with pytest-cov: `pytest --cov=.`
+   5. HTML test cover report with pytest-cov (exported in `htmlcov` folder): <code>pytest --cov=. --cov-report html
+   6. Performance test with locust (consultable on http://127.0.0.1:8089): `locust --web-host 127.0.0.1`
+   
