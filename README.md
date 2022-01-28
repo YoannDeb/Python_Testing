@@ -50,10 +50,9 @@
     [coverage](https://coverage.readthedocs.io/en/coverage-5.1/) you should add to your project.
    
    Test commands to launch from root of the project:
-   1. Unit tests with Pytest: <code>pytest -v -s</code>
-   2. Functional tests with pytest, selenium and Chrome: <code>pytest tests/functional_tests/typical_navigation_chrome.py -v -s</code>
-   3. Functional tests with pytest, selenium and Firefox: <code>pytest tests/functional_tests/typical_navigation_firefox.py -v -s</code>
+   1. Unit tests with Pytest: `pytest -v -s`
+   2. Functional tests with pytest, selenium and Chrome: `pytest tests/functional_tests/typical_navigation_chrome.py -v -s`
+   3. Functional tests with pytest, selenium and Firefox: `pytest tests/functional_tests/typical_navigation_firefox.py -v -s`
    4. Quick test cover with pytest-cov: `pytest --cov=.`
-   5. HTML test cover report with pytest-cov (exported in `htmlcov` folder): <code>pytest --cov=. --cov-report html
+   5. HTML test cover report with pytest-cov (exported in `htmlcov` folder): `pytest --cov=. --cov-report html`
    6. Performance test with locust (consultable on http://127.0.0.1:8089): `locust --web-host 127.0.0.1`
-   
