@@ -19,7 +19,7 @@ def mock_loadClubs_not_empty():
         {
             "name": "Simply Lift",
             "email": "john@simplylift.co",
-            "points": "13"
+            "points": "45"
         },
         {
             "name": "Iron Temple",
