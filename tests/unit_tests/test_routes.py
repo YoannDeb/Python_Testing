@@ -241,7 +241,6 @@ class TestBook:
         """
         response = client.get('/book/UnknownCompetition/UnknownClub')
         data = response.data.decode()
-        print(data)
         assert "Something went wrong-please try again" in data
         assert "Great-booking complete!" not in data
         assert "Points available: 45" in data
