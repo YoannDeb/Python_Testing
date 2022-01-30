@@ -2,6 +2,11 @@ from server import loadClubs, loadCompetitions
 
 
 def test_loadClubs_should_return_clubs():
+    """
+    GIVEN the original json clubs' data file exists and is accessible
+    WHEN loadClubs function is used to create clubs variable
+    THEN clubs variable contains correct club data.
+    """
     clubs = loadClubs()
     assert clubs[0:3] == [
         {
@@ -22,6 +27,11 @@ def test_loadClubs_should_return_clubs():
 
 
 def test_loadCompetitions_should_return_competitions():
+    """
+    GIVEN the original json competitions' data file exists and is accessible
+    WHEN loadClubs function is used to create competitions variable
+    THEN competitions variable contains correct competition data.
+    """
     competitions = loadCompetitions()
     assert competitions[0:2] == [
         {
