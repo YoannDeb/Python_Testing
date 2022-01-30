@@ -6,18 +6,36 @@ import datetime
 POINTS_PER_PLACE = 3
 
 def loadClubs():
+    """
+    Loads clubs' data from json file.
+    Data is for testing purpose.
+    As it's an MVP, it avoids use of a database.
+    Data is not saved in json, so it's reset with server restart.
+    :return: ListOfClubs: The list of clubs from json file.
+    """
     with open('clubs.json') as c:
          listOfClubs = json.load(c)['clubs']
          return listOfClubs
 
 
 def loadCompetitions():
+    """
+    Loads competitions' data from json file.
+    Data is for testing purpose.
+    As it's an MVP, it avoids use of a database.
+    Data is not saved in json, so it's reset with server restart.
+    :return: ListOfClubs: The list of clubs from json file.
+    """
     with open('competitions.json') as comps:
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
 
 
 def register_club_points_in_clubs(modified_club):
+    """
+    Registers club modified data in clubs global variable
+    :param modified_club: clubs data that is to be registered.
+    """
     list_position = 0
     for club in clubs:
         if club['name'] == modified_club['name']:
@@ -27,6 +45,10 @@ def register_club_points_in_clubs(modified_club):
 
 
 def register_competition_in_competitions(modified_competition):
+    """
+    Registers competition modified data in clubs global variable
+    :param modified_competition: clubs data that is to be registered.
+    """
     list_position = 0
     for competition in competitions:
         if competition['name'] == modified_competition['name']:
@@ -43,11 +65,24 @@ clubs = loadClubs()
 
 @app.route('/')
 def index():
+    """
+    Route for index page.
+    Using a form to get user's email for login.
+    Mail must be valid and be part of the clubs' emails. That last point is verified in showSummary.
+    :return: A render of the index.html template.
+    """
     form = RegistrationForm(request.form)
     return render_template('index.html', form=form)
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
+    """
+    Route for showSummary page, which shows email of logged user, all competitions etc.
+    First checks if email is part of clubs' emails.
+    If not, it redirects to index with appropriate error message.
+    If so, the club is selected to be sent to the template.
+    :return: A redirection to index if form is not valid. Else a render of the appropriate template.
+    """
     form = RegistrationForm(request.form)
     if form.validate():
         email = form.email.data
@@ -59,7 +94,14 @@ def showSummary():
 
 
 @app.route('/book/<competition>/<club>')
-def book(competition,club):
+def book(competition, club):
+    """
+    Route for booking page, which let the user enter the number of places he wants.
+    Access is denied for past competitions.
+    :param competition: The competition the user is booking for.
+    :param club: The user's club.
+    :return: A render of the appropriate template.
+    """
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
     competition_date = datetime.datetime(year=int(foundCompetition['date'][:4]),
@@ -80,6 +122,18 @@ def book(competition,club):
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
+    """
+    Route for purchasePlaces.
+    Checks if the place reservation is possible.
+    Constraints are:
+    - places number greater than 0
+    - sufficient clubs' points count
+    - 12 places maximum per club and competition
+    If purchase is valid, performs modification of the data, and saving.
+    A message is flashed in the template to inform user what happened.
+    note: Using the POINTS_PER_PLACE constant, which is currently 3.
+    :return: A render of the welcome.html template.
+    """
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     try:
@@ -107,9 +161,19 @@ def purchasePlaces():
 
 @app.route('/pointsDisplay')
 def PointsDisplay():
+    """
+    Route for pointsDisplay template, which shows a table of all clubs and the points they have.
+    This page is public, no needs to be logged in to consult it.
+    :return: A render of the pointsdisplay.html page.
+    """
     return render_template('pointsdisplay.html', clubs=clubs)
 
 
 @app.route('/logout')
 def logout():
+    """
+    Route for logout.
+    the redirection breaks the authentification as it is now.
+    :return: A redirection to index page
+    """
     return redirect(url_for('index'))
