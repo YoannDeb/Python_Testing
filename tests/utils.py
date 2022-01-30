@@ -3,10 +3,18 @@ import server
 
 
 def mock_load_Clubs_or_Competitions_empty():
+    """
+    Mock function to return empty dictionary instead of normal loadClubs or loadCompetitions returns.
+    :return: An empty dictionary.
+    """
     return {}
 
 
 def mock_loadClubs_not_empty():
+    """
+    Mock function to return custom test dictionary instead of normal loadClubs return.
+    :return: A custom dictionary.
+    """
     clubs = [
         {
             "name": "Simply Lift",
@@ -27,6 +35,10 @@ def mock_loadClubs_not_empty():
 
 
 def mock_loadCompetitions_not_empty():
+    """
+    Mock function to return custom test dictionary instead of normal loadCompetitions return.
+    :return: A custom dictionary.
+    """
     competitions = [
         {
             "name": "Spring Festival",
@@ -49,23 +61,39 @@ def mock_loadCompetitions_not_empty():
 
 @pytest.fixture
 def mock_normal_data_from_json(mocker):
+    """
+    Pytest fixture to mock normal test data.
+    :param mocker: Mocker fixture from pytest-mock plugin.
+    """
     mocker.patch.object(server, 'clubs', mock_loadClubs_not_empty())
     mocker.patch.object(server, 'competitions', mock_loadCompetitions_not_empty())
 
 
 @pytest.fixture
 def mock_data_from_json_with_empty_clubs(mocker):
+    """
+    Pytest fixture to mock normal competitions' data and empty clubs.
+    :param mocker: Mocker fixture from pytest-mock plugin.
+    """
     mocker.patch.object(server, 'clubs', mock_load_Clubs_or_Competitions_empty())
     mocker.patch.object(server, 'competitions', mock_loadCompetitions_not_empty())
 
 
 @pytest.fixture
 def mock_data_from_json_with_empty_competitions(mocker):
+    """
+    Pytest fixture to mock normal clubs' data and empty competitions.
+    :param mocker: Mocker fixture from pytest-mock plugin.
+    """
     mocker.patch.object(server, 'clubs', mock_loadClubs_not_empty())
     mocker.patch.object(server, 'competitions', mock_load_Clubs_or_Competitions_empty())
 
 
 @pytest.fixture
 def mock_empty_data_from_json(mocker):
+    """
+    Pytest fixture to mock empty test data.
+    :param mocker: Mocker fixture from pytest-mock plugin.
+    """
     mocker.patch.object(server, 'clubs', mock_load_Clubs_or_Competitions_empty())
     mocker.patch.object(server, 'competitions', mock_load_Clubs_or_Competitions_empty())
