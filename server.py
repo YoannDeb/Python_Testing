@@ -97,7 +97,11 @@ def showSummary():
 def book(competition, club):
     """
     Route for booking page, which let the user enter the number of places he wants.
-    Access is denied for past competitions.
+    Booking is not allowed if:
+    - competition occurs in the past
+    - if the club from url is not in the clubs list
+    - if the competition from url is not in the competitions list
+    Note that if the club does not exist, user will see th index page to identify the club again with secretary email.
     :param competition: The competition the user is booking for.
     :param club: The user's club.
     :return: A render of the appropriate template.
