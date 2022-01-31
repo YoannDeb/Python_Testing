@@ -187,7 +187,7 @@ class TestBook:
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the user chooses a past competitions of which he wants to book places
         THEN the app returns expected content, the user can't access the book page and
-        goes to the welcome page (showSummary route) with error message.
+        goes to the welcome page (showSummary route) with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
@@ -203,7 +203,7 @@ class TestBook:
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the club in the address does not exist
         THEN the app returns expected content, the user can't access the book page and
-        goes to the welcome page (showSummary route) with error message.
+        goes to the welcome page (showSummary route) with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
@@ -219,32 +219,30 @@ class TestBook:
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the competition in the address does not exist
         THEN the app returns expected content, the user can't access the book page and
-        goes to the welcome page (showSummary route) with error message.
+        goes to the index page with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
         response = client.get('/book/Spring Festival/UnknownClub')
         data = response.data.decode()
-        assert "Something went wrong-please try again" in data
-        assert "Great-booking complete!" not in data
-        assert "Points available: 45" in data
-        assert "Number of Places: 25" in data
+        assert "Welcome to the GUDLFT Registration Portal!" in data
+        assert "Please enter your secretary email to continue:" in data
+        assert "Something went wrong, please enter your mail again." in data
 
     def test_book_should_return_error_message_when_competition_and_club_does_not_exist(self, client, mock_normal_data_from_json):
         """
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the club and competition in the address does not exist
         THEN the app returns expected content, the user can't access the book page and
-        goes to the welcome page (showSummary route) with error message.
+        goes to the index page with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
         response = client.get('/book/UnknownCompetition/UnknownClub')
         data = response.data.decode()
-        assert "Something went wrong-please try again" in data
-        assert "Great-booking complete!" not in data
-        assert "Points available: 45" in data
-        assert "Number of Places: 25" in data
+        assert "Welcome to the GUDLFT Registration Portal!" in data
+        assert "Please enter your secretary email to continue:" in data
+        assert "Something went wrong, please enter your mail again." in data
 
 
 class TestPurchasePlaces:
@@ -340,7 +338,7 @@ class TestPurchasePlaces:
         GIVEN a user is logged and as chosen a competition
         WHEN the user orders 7 places then 6 places
         THEN the points available for the club and the number of places of the competition are updated for the
-        first order, but the second order is not filled. An information message is also shown for the two orders.
+        first order, but the second order is not filled. An information message is also shown after each order.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
@@ -367,7 +365,7 @@ class TestPurchasePlaces:
         """
         response = client.post('/purchasePlaces', data={'places': '5', 'club': 'Iron Temple', 'competition': 'Spring Festival'})
         data = response.data.decode()
-        assert "Club doesn't have enough points to book this amount of places."
+        assert "Club doesn&#39;t have enough points to book this amount of places." in data
         assert "Great-booking complete!" not in data
         assert "Points available: 4" in data
         assert "Number of Places: 25" in data
