@@ -1,7 +1,8 @@
 from tests.conftest import client
 from urllib.parse import urlparse
 
-from tests.utils import mock_normal_data_from_json, mock_empty_data_from_json, mock_data_from_json_with_empty_clubs, mock_data_from_json_with_empty_competitions
+from tests.utils import mock_normal_data_from_json, mock_empty_data_from_json, mock_data_from_json_with_empty_clubs, \
+    mock_data_from_json_with_empty_competitions
 
 
 class TestIndex:
@@ -119,7 +120,8 @@ class TestShowSummary:
         response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
         assert response.status_code == 200
 
-    def test_show_summary_should_return_status_code_ok_with_empty_clubs(self, client, mock_data_from_json_with_empty_clubs):
+    def test_show_summary_should_return_status_code_ok_with_empty_clubs(
+            self, client, mock_data_from_json_with_empty_clubs):
         """
         GIVEN a user is not logged on the app and the test data about clubs is empty
         WHEN the user sends a POST request to the showSummary page with a secretary email inside it
@@ -131,7 +133,8 @@ class TestShowSummary:
         response = client.post('/showSummary', data={'email': 'john@simplylift.co'})
         assert response.status_code == 200
 
-    def test_show_summary_should_return_status_code_ok_with_empty_competitions(self, client, mock_data_from_json_with_empty_competitions):
+    def test_show_summary_should_return_status_code_ok_with_empty_competitions(
+            self, client, mock_data_from_json_with_empty_competitions):
         """
         GIVEN a user is not logged on the app and the test data about competitions is empty
         WHEN the user sends a POST request to the showSummary page with a secretary email inside it
@@ -229,7 +232,8 @@ class TestBook:
         assert "Please enter your secretary email to continue:" in data
         assert "Something went wrong, please enter your mail again." in data
 
-    def test_book_should_return_error_message_when_competition_and_club_does_not_exist(self, client, mock_normal_data_from_json):
+    def test_book_should_return_error_message_when_competition_and_club_does_not_exist(
+            self, client, mock_normal_data_from_json):
         """
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the club and competition in the address does not exist
@@ -255,10 +259,12 @@ class TestPurchasePlaces:
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
-        response = client.post('/purchasePlaces', data={'places': '3', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '3',
+                                                        'club': 'Simply Lift', 'competition': 'Spring Festival'})
         assert response.status_code == 200
 
-    def test_purchasePlaces_should_return_correct_informations_after_booking_3_places(self, client, mock_normal_data_from_json):
+    def test_purchasePlaces_should_return_correct_informations_after_booking_3_places(
+            self, client, mock_normal_data_from_json):
         """
         GIVEN a user is logged and as chosen a competition
         WHEN the user wants to order 3 places
@@ -274,7 +280,8 @@ class TestPurchasePlaces:
         assert "Points available: 36" in data
         assert "Number of Places: 22" in data
 
-    def test_purchasePlaces_should_return_correct_informations_after_booking_0_places(self, client, mock_normal_data_from_json):
+    def test_purchasePlaces_should_return_correct_informations_after_booking_0_places(
+            self, client, mock_normal_data_from_json):
         """
         GIVEN a user is logged and as chosen a competition
         WHEN the user wants to order 0 places
@@ -283,7 +290,8 @@ class TestPurchasePlaces:
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
-        response = client.post('/purchasePlaces', data={'places': '0', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '0',
+                                                        'club': 'Simply Lift', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "Welcome, john@simplylift.co" in data
         assert "The number of places must be greater than 0 to be valid." in data
@@ -310,14 +318,16 @@ class TestPurchasePlaces:
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
-        response = client.post('/purchasePlaces', data={'places': '-3', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '-3',
+                                                        'club': 'Simply Lift', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "Welcome, john@simplylift.co" in data
         assert "The number of places must be greater than 0 to be valid." in data
         assert "Points available: 45" in data
         assert "Number of Places: 25" in data
 
-    def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_one_purchase(self, client, mock_normal_data_from_json):
+    def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_one_purchase(
+            self, client, mock_normal_data_from_json):
         """
         GIVEN a user is logged and as chosen a competition
         WHEN the user wants to order 13 places
@@ -326,14 +336,16 @@ class TestPurchasePlaces:
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
-        response = client.post('/purchasePlaces', data={'places': '13', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '13',
+                                                        'club': 'Simply Lift', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "You can&#39;t book more than 12 places in a single competition." in data
         assert "Great-booking complete!" not in data
         assert "Points available: 45" in data
         assert "Number of Places: 25" in data
 
-    def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_two_purchase(self, client, mock_normal_data_from_json):
+    def test_purchasePlaces_should_not_allow_booking_more_than_12_places_in_two_purchase(
+            self, client, mock_normal_data_from_json):
         """
         GIVEN a user is logged and as chosen a competition
         WHEN the user orders 7 places then 6 places
@@ -342,19 +354,22 @@ class TestPurchasePlaces:
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
-        response = client.post('/purchasePlaces', data={'places': '7', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '7',
+                                                        'club': 'Simply Lift', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "Great-booking complete!" in data
         assert "Points available: 24" in data
         assert "Number of Places: 18" in data
-        response = client.post('/purchasePlaces', data={'places': '6', 'club': 'Simply Lift', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '6',
+                                                        'club': 'Simply Lift', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "You can&#39;t book more than 12 places in a single competition." in data
         assert "Great-booking complete!" not in data
         assert "Points available: 24" in data
         assert "Number of Places: 18" in data
 
-    def test_purchasePlaces_should_not_allow_booking_more_places_than_the_amount_of_points_the_club_has(self, client, mock_normal_data_from_json):
+    def test_purchasePlaces_should_not_allow_booking_more_places_than_the_amount_of_points_the_club_has(
+            self, client, mock_normal_data_from_json):
         """
         GIVEN a user is logged and as chosen a competition
         WHEN the user orders 5 places for a competition that only have 5 places avilable
@@ -363,7 +378,8 @@ class TestPurchasePlaces:
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
-        response = client.post('/purchasePlaces', data={'places': '5', 'club': 'Iron Temple', 'competition': 'Spring Festival'})
+        response = client.post('/purchasePlaces', data={'places': '5',
+                                                        'club': 'Iron Temple', 'competition': 'Spring Festival'})
         data = response.data.decode()
         assert "Club doesn&#39;t have enough points to book this amount of places." in data
         assert "Great-booking complete!" not in data
