@@ -97,27 +97,44 @@ def showSummary():
 def book(competition, club):
     """
     Route for booking page, which let the user enter the number of places he wants.
-    Access is denied for past competitions.
+    Booking is not allowed if:
+    - competition occurs in the past
+    - if the club from url is not in the clubs list
+    - if the competition from url is not in the competitions list
+    Note that if the club does not exist, user will see th index page to identify the club again with secretary email.
     :param competition: The competition the user is booking for.
     :param club: The user's club.
     :return: A render of the appropriate template.
     """
-    foundClub = [c for c in clubs if c['name'] == club][0]
-    foundCompetition = [c for c in competitions if c['name'] == competition][0]
-    competition_date = datetime.datetime(year=int(foundCompetition['date'][:4]),
-                                         month=int(foundCompetition['date'][5:7]),
-                                         day=int(foundCompetition['date'][8:10]),
-                                         hour=int(foundCompetition['date'][11:13]),
-                                         minute=int(foundCompetition['date'][14:16]),
-                                         second=int(foundCompetition['date'][17:18]))
+
+    found_club_list = [c for c in clubs if c['name'] == club]
+    if found_club_list:
+        foundClub = found_club_list[0]
+    else:
+        foundClub = None
+    found_competition_list = [c for c in competitions if c['name'] == competition]
+    if found_competition_list:
+        foundCompetition = found_competition_list[0]
+    else:
+        foundCompetition = None
+
     if foundClub and foundCompetition:
+        competition_date = datetime.datetime(year=int(foundCompetition['date'][:4]),
+                                             month=int(foundCompetition['date'][5:7]),
+                                             day=int(foundCompetition['date'][8:10]),
+                                             hour=int(foundCompetition['date'][11:13]),
+                                             minute=int(foundCompetition['date'][14:16]),
+                                             second=int(foundCompetition['date'][17:18]))
         if competition_date < datetime.datetime.now():
             flash("You can't book a place for past competitions.")
             return render_template('welcome.html', club=foundClub, competitions=competitions)
         return render_template('booking.html', club=foundClub, competition=foundCompetition)
-    else:
+    elif foundClub:
         flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=foundClub, competitions=competitions)
+    else:
+        form = RegistrationForm(request.form)
+        return render_template('index.html', form=form, message="Something went wrong, please enter your mail again.", style="color:red")
 
 
 @app.route('/purchasePlaces', methods=['POST'])
