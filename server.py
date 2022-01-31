@@ -5,6 +5,7 @@ import datetime
 
 POINTS_PER_PLACE = 3
 
+
 def loadClubs():
     """
     Loads clubs' data from json file.
@@ -63,6 +64,7 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 
+
 @app.route('/')
 def index():
     """
@@ -73,6 +75,7 @@ def index():
     """
     form = RegistrationForm(request.form)
     return render_template('index.html', form=form)
+
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
@@ -87,7 +90,8 @@ def showSummary():
     if form.validate():
         email = form.email.data
         if email not in [club['email'] for club in clubs]:
-            return render_template('index.html', form=form, message="You are not secretary of a club. Please input a secretary email.", style="color:red")
+            return render_template('index.html', form=form, message="You are not secretary of a club. "
+                                                                    "Please input a secretary email.", style="color:red")
         club = [club for club in clubs if club['email'] == email][0]
         return render_template('welcome.html', club=club, competitions=competitions, form=form)
     return redirect(url_for('index'))
@@ -134,7 +138,8 @@ def book(competition, club):
         return render_template('welcome.html', club=foundClub, competitions=competitions)
     else:
         form = RegistrationForm(request.form)
-        return render_template('index.html', form=form, message="Something went wrong, please enter your mail again.", style="color:red")
+        return render_template('index.html', form=form, message="Something went wrong, "
+                                                                "please enter your mail again.", style="color:red")
 
 
 @app.route('/purchasePlaces', methods=['POST'])
