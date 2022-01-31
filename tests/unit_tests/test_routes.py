@@ -187,7 +187,7 @@ class TestBook:
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the user chooses a past competitions of which he wants to book places
         THEN the app returns expected content, the user can't access the book page and
-        goes to the welcome page (showSummary route) with error message.
+        goes to the welcome page (showSummary route) with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
@@ -203,7 +203,7 @@ class TestBook:
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the club in the address does not exist
         THEN the app returns expected content, the user can't access the book page and
-        goes to the welcome page (showSummary route) with error message.
+        goes to the welcome page (showSummary route) with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
@@ -219,7 +219,7 @@ class TestBook:
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the competition in the address does not exist
         THEN the app returns expected content, the user can't access the book page and
-        goes to the index page with error message.
+        goes to the index page with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
@@ -234,7 +234,7 @@ class TestBook:
         GIVEN a user is logged on the app and we know which club he is secretary of
         WHEN the club and competition in the address does not exist
         THEN the app returns expected content, the user can't access the book page and
-        goes to the welcome page (showSummary route) with error message.
+        goes to the index page with an error message.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
@@ -338,7 +338,7 @@ class TestPurchasePlaces:
         GIVEN a user is logged and as chosen a competition
         WHEN the user orders 7 places then 6 places
         THEN the points available for the club and the number of places of the competition are updated for the
-        first order, but the second order is not filled. An information message is also shown for the two orders.
+        first order, but the second order is not filled. An information message is also shown after each order.
         :param client: Pytest fixture for test client in conftest.py.
         :param mock_normal_data_from_json: Pytest fixture mocking db loading with test data.
         """
