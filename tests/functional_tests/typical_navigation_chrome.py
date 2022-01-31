@@ -12,7 +12,7 @@ def setup_chrome_webdriver():
     """
     Setup function for Chrome webdriver using Selenium.
     Tries to use webdriver_manager to automatically download the webdriver.
-    If it fails (Internet problem or Github API limit reached) it uses a manually downloaded driver
+    If it fails (Internet problem or GitHub API limit reached) it uses a manually downloaded driver
     located with PATH constant.
     :return: the driver object to be used in test function
     """
@@ -27,7 +27,7 @@ def setup_chrome_webdriver():
 
 def test_typical_navigation():
     """
-    Functional test function with chrome browser.
+    Functional test function with Chrome browser.
     Uses setup_chrome_webdriver function to configure the driver.
     Uses typical_navigation function from typical_navigation_utils module to perform the test with Selenium.
     """
